@@ -10,7 +10,6 @@
     <PackageProjectUrl>https://github.com/AI-Guiders/guiders-assist</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AI-Guiders/guiders-assist.git</RepositoryUrl>
     <PackageReadmeFile>README-NUGET.md</PackageReadmeFile>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
     <PackageType>Template</PackageType>
     <TargetFramework>net8.0</TargetFramework>
