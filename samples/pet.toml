@@ -1,0 +1,5 @@
+#:schema pet.schema.json
+
+name = "demo"
+version = "1.0.0"
+tags = ["toml", "schema"]

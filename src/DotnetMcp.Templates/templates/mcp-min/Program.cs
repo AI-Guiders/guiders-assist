@@ -1,0 +1,46 @@
+using System.Collections.Frozen;
+using System.Text.Json;
+using AIGuiders.SampleMcp;
+using ModelContextProtocol.Protocol;
+using ModelContextProtocol.Server;
+
+var tools = ToolCatalog.Build();
+
+var options = new McpServerOptions
+{
+    ServerInfo = new Implementation { Name = "AIGuiders.SampleMcp", Version = "0.1.0" },
+    ProtocolVersion = "2024-11-05",
+    Capabilities = new ServerCapabilities { Tools = new ToolsCapability { ListChanged = false } },
+    Handlers = new McpServerHandlers
+    {
+        ListToolsHandler = (_, _) => ValueTask.FromResult(new ListToolsResult { Tools = tools }),
+
+        CallToolHandler = (request, _) =>
+        {
+            var name = request.Params?.Name ?? "";
+            var args = request.Params?.Arguments is IReadOnlyDictionary<string, JsonElement> d
+                ? d
+                : FrozenDictionary<string, JsonElement>.Empty;
+
+            try
+            {
+                var text = ToolHandlers.Handle(name, args);
+                return ValueTask.FromResult(new CallToolResult { Content = [new TextContentBlock { Text = text }] });
+            }
+            catch (Exception ex)
+            {
+                return ValueTask.FromResult(new CallToolResult
+                {
+                    Content = [new TextContentBlock { Text = "Error: " + ex.Message }],
+                    IsError = true,
+                });
+            }
+        },
+    },
+};
+
+var transport = new StdioServerTransport("sample-mcp");
+await using var server = McpServer.Create(transport, options);
+await server.RunAsync();
+return 0;
+

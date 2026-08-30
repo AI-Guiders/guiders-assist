@@ -1,0 +1,58 @@
+# NuGet publish via Trusted Publishing (OIDC).
+# TP: Account → Trusted Publishing, Package owner AIGuiders, repo guiders-assist, workflow release.yml
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: SemVer for all ship packages (e.g. 1.2.0)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Resolve version
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            ver="${GITHUB_REF_NAME#v}"
+          else
+            ver="${{ inputs.version }}"
+          fi
+          echo "PKG_VERSION=$ver" >> "$GITHUB_ENV"
+
+      - run: dotnet test Guiders.Assist.sln -c Release
+
+      - name: Pack ship packages
+        run: |
+          dotnet pack Guiders.Assist.sln -c Release -o ./artifacts \
+            /p:PackageVersion="${PKG_VERSION}" \
+            /p:Version="${PKG_VERSION}"
+
+      - name: NuGet login (OIDC)
+        uses: NuGet/login@v1
+        id: nuget_login
+        with:
+          user: AIGuiders
+
+      - name: Push nupkg / snupkg
+        env:
+          NUGET_API_KEY: ${{ steps.nuget_login.outputs.NUGET_API_KEY }}
+        run: bash scripts/nuget/push-artifacts.sh 'artifacts/AIGuiders.*.nupkg'

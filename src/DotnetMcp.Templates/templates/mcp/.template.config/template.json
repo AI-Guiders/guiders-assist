@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "AIGuiders",
+  "classifications": [ "Common", "Tool", "MCP" ],
+  "identity": "AIGuiders.DotnetMcp.Template.Full",
+  "name": "MCP server (full: manifest/docs/tests/publish)",
+  "shortName": [ "mcp" ],
+  "sourceName": "AIGuiders.SampleMcp",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "symbols": {
+    "mcp_id": {
+      "type": "parameter",
+      "datatype": "string",
+      "defaultValue": "sample-mcp",
+      "description": "MCP id / server key (used in docs/snippets and stdio transport name).",
+      "replaces": "sample-mcp"
+    }
+  }
+}
+

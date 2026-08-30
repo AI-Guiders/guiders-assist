@@ -1,0 +1,15 @@
+* text=auto
+
+*.cs        text eol=lf
+*.md        text eol=lf
+*.json      text eol=lf
+*.yml       text eol=lf
+*.csproj    text eol=lf
+
+*.sln       text eol=crlf
+*.slnx      text eol=crlf
+*.ps1       text eol=crlf
+
+*.nupkg     -text
+*.dll       -text
+*.pdb       -text

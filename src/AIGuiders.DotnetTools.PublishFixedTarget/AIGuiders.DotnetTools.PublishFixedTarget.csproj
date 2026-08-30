@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OutputType>Exe</OutputType>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>aid-publish</ToolCommandName>
+    <PackageId>AIGuiders.DotnetTools.PublishFixedTarget</PackageId>
+    <Version>0.1.5</Version>
+    <Authors>AIGuiders</Authors>
+    <Title>AIGuiders publish to fixed target</Title>
+    <Description>dotnet publish wrapper: mirror to fixed target, optional kill-locking process, and print proof timestamps.</Description>
+    <PackageTags>dotnet-tool;publish;deploy;robustness</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/AI-Guiders/guiders-assist</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AI-Guiders/guiders-assist.git</RepositoryUrl>
+
+    <!-- Ensure runtimeconfig.json is included in tool package -->
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ookii.CommandLine">
+      <Version>5.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+</Project>
+

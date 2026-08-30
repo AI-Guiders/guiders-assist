@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>14</LangVersion>
+    <RootNamespace>AIGuiders.DotnetTools.TomlCheck</RootNamespace>
+    <AssemblyName>AIGuiders.DotnetTools.TomlCheck</AssemblyName>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>aig-toml-check</ToolCommandName>
+    <PackageId>AIGuiders.DotnetTools.TomlCheck</PackageId>
+    <Description>Validate TOML files against JSON Schema (#:schema directive, Tomlyn + JsonSchema.Net).</Description>
+    <PackageTags>toml;json-schema;validation;cli;dotnet-tool</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="LICENSE" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JsonSchema.Net" Version="9.2.0" />
+    <PackageReference Include="Tomlyn" Version="2.10.1" />
+  </ItemGroup>
+
+</Project>

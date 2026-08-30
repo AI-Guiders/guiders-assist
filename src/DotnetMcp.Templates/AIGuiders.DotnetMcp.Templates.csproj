@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>AIGuiders.DotnetMcp.Templates</PackageId>
+    <PackageVersion>0.1.10</PackageVersion>
+    <Title>AIGuiders dotnet MCP templates</Title>
+    <Authors>AIGuiders</Authors>
+    <Description>Templates for building Model Context Protocol (MCP) servers on .NET (tool catalog + handlers + publish/deploy + manifest/docs automation).</Description>
+    <PackageTags>dotnet-new;templates;mcp;modelcontextprotocol;dotnet</PackageTags>
+    <PackageProjectUrl>https://github.com/AI-Guiders/guiders-assist</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AI-Guiders/guiders-assist.git</RepositoryUrl>
+    <PackageReadmeFile>README-NUGET.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+
+    <PackageType>Template</PackageType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoWarn>$(NoWarn);NU5128;NU5110;NU5111</NoWarn>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
+    <None Include="README-NUGET.md" Pack="true" PackagePath="" />
+    <None Include="LICENSE" Pack="true" PackagePath="" />
+    <Compile Remove="**\*" />
+  </ItemGroup>
+
+</Project>
+
