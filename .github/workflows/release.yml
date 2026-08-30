@@ -1,5 +1,5 @@
 # NuGet publish via Trusted Publishing (OIDC).
-# TP: Account → Trusted Publishing, Package owner AIGuiders, repo guiders-assist, workflow release.yml
+# TP: Account → Trusted Publishing (LonelySoul), Package owner AIGuiders, repo guiders-assist, workflow release.yml
 name: release
 
 on:
@@ -50,7 +50,7 @@ jobs:
         uses: NuGet/login@v1
         id: nuget_login
         with:
-          user: AIGuiders
+          user: LonelySoul
 
       - name: Push nupkg / snupkg
         env:
