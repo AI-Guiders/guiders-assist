@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>14</LangVersion>
+    <RootNamespace>AIGuiders.DotnetTools.DeckEmit</RootNamespace>
+    <AssemblyName>AIGuiders.DotnetTools.DeckEmit</AssemblyName>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>deck</ToolCommandName>
+    <PackageId>AIGuiders.DotnetTools.DeckEmit</PackageId>
+    <Description>Emit DeckIds.g.cs from federation .deck files (GUIDERS-ADR-0055).</Description>
+    <PackageTags>deck;wpf;authoring;cli;dotnet-tool</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GuidersPlatformRoot Condition="'$(GuidersPlatformRoot)' == ''">$(MSBuildThisFileDirectory)..\..\..\guiders-platform</GuidersPlatformRoot>
+    <GuidersWpfRoot Condition="'$(GuidersWpfRoot)' == ''">$(MSBuildThisFileDirectory)..\..\..\guiders-wpf</GuidersWpfRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(GuidersPlatformRoot)\src\AIGuiders.Platform.Authoring.Deck\AIGuiders.Platform.Authoring.Deck.csproj" />
+    <ProjectReference Include="$(GuidersWpfRoot)\src\AIGuiders.Surface.Wpf.CodeGen\AIGuiders.Surface.Wpf.CodeGen.csproj" />
+  </ItemGroup>
+</Project>
