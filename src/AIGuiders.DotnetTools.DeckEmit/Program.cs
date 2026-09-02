@@ -24,10 +24,10 @@ static int PrintUsage()
 {
     Console.WriteLine(
         """
-        deck — federation .deck toolchain
+        deck — federation GDL deck toolchain
 
         Usage:
-          deck emit <file.deck> [--namespace N] [--class C] [--output path]
+          deck emit <file.deck.gdl> [--namespace N] [--class C] [--output path]
           deck --version
           deck --help
         """);
