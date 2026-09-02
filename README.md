@@ -31,4 +31,4 @@ See [docs/migration.md](docs/migration.md) for legacy repo mapping and TP cutove
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Software: [MIT](LICENSE) ([OSI text](https://opensource.org/license/MIT)) · Ethical use: [declaration](https://github.com/AI-Guiders/licensing/blob/main/docs/ethical-use.md)
