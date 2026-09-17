@@ -1,0 +1,97 @@
+# DOCUMENT: config.toml
+
+title = "TOML Example"
+
+[toml-schema]
+version = "1.0.0"
+location = "config.tosd"
+
+[owner]
+name = "Tom Preston-Werner"
+dob = 1979-05-27T07:32:00-08:00 # First class dates
+
+[database]
+server = "192.168.1.1"
+ports = [ 8001, 8001, 8002 ]
+connection_max = 5000
+enabled = true
+
+[serverGroups]
+
+	[serverGroups.group1]
+	groupname = "US2"
+
+		# Indentation (tabs and/or spaces) is allowed but not required
+		[serverGroups.group1.servers]
+
+			[serverGroups.group1.servers.alpha]
+			ip = "10.0.0.1"
+			dc = "eqdc10"
+
+		  		[serverGroups.group1.servers.alpha.firewall]
+		  		inbound = "0.0.0.0/24"
+		  		outbound = "0.0.0.0/24"
+
+			[serverGroups.group1.servers.beta]
+			ip = "10.0.0.2"
+			dc = "eqdc10"
+
+				[serverGroups.group1.servers.beta.maindb]
+				server = "192.168.1.2"
+				ports = [ 8001, 8002 ]
+				connection_max = 1000
+				enabled = true
+
+				[serverGroups.group1.servers.beta.sharding]
+
+					[serverGroups.group1.servers.beta.sharding.db1]
+					server = "192.168.1.11"
+					ports = [ 8001 ]
+					connection_max = 1000
+					enabled = true
+
+					[serverGroups.group1.servers.beta.sharding.db2]
+					server = "192.168.1.12"
+					ports = [ 8002 ]
+					connection_max = 1000
+					enabled = true
+
+		  		[serverGroups.group1.servers.beta.replicas]
+
+		  			[serverGroups.group1.servers.beta.replicas.rp1]
+					ip = "10.0.1.1"
+		  			dc = "..."
+
+		  			[serverGroups.group1.servers.beta.replicas.rp2]
+					ip = "10.0.1.2"
+		  			dc = "..."
+
+[clients]
+data = [ ["gamma", "delta"], [1, 2] ]
+
+# Line breaks are OK when inside arrays
+hosts = [
+  "alpha",
+  "omega"
+]
+
+points = [
+  { x = 1, y = 2, z = 3 },
+  { x = 7, y = 8, z = 9 },
+  { x = 2, y = 4 }
+]
+
+# This element is a 'collection' of type 'libraryType'
+# and each library can be expressed with an inline table
+[libraries]
+lib1 = { name = "gcc", version = "10.2" }
+lib2 = { name = "make", version = "4.0" }
+
+[[products]]
+name = "Hammer"
+sku = 738594937
+
+[[products]]
+name = "Nail"
+sku = 284758393
+color = "gray"

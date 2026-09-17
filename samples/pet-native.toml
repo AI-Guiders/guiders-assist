@@ -1,0 +1,5 @@
+#:schema pet.tosd
+
+name = "demo"
+version = "1.0.0"
+tags = ["toml", "schema"]

@@ -12,6 +12,7 @@ Successor to `mcp-tool-manifest`, `dotnet-mcp-templates`, and `AIGuiders.DotnetT
 | `AIGuiders.Cli` | `src/AIGuiders.Cli` |
 | `AIGuiders.DotnetTools.PublishFixedTarget` | `src/AIGuiders.DotnetTools.PublishFixedTarget` (`aid-publish`) |
 | `AIGuiders.DotnetTools.TomlCheck` | `src/AIGuiders.DotnetTools.TomlCheck` (`aig-toml-check`) |
+| `AIGuiders.TomlSchema` | `src/AIGuiders.TomlSchema` (vendored .NET TOML Schema engine) |
 | `AIGuiders.DotnetTools.DeckEmit` | `src/AIGuiders.DotnetTools.DeckEmit` (`deck emit`) |
 
 **Not here:** `AIGuiders.WebcamMcp.Shared` (product domain) — stays in `webcam-mcp-shared`.

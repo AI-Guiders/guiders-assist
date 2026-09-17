@@ -1,0 +1,1242 @@
+# Based on https://developers.cloudflare.com/workers/wrangler/configuration/
+
+[toml-schema]
+version = "1.0.0"
+
+[types.numberValue]
+oneof = [ "integer", "float" ]
+
+[types.stringArray]
+type = "array"
+itemtype = "string"
+
+[types.numberArray]
+type = "array"
+itemtype = "types.numberValue"
+
+[types.stringMap]
+type = "collection"
+itemtype = "string"
+
+[types.email]
+type = "string"
+format = "email"
+
+[types.emailArray]
+type = "array"
+itemtype = "types.email"
+
+[types.ipv4]
+type = "string"
+format = "ipv4"
+
+[types.ipv6]
+type = "string"
+format = "ipv6"
+
+[types.ipAddress]
+oneof = [ "types.ipv4", "types.ipv6" ]
+
+[types.anyMap]
+type = "collection"
+itemtype = "any"
+
+[types.stringOrStringArray]
+oneof = [ "string", "types.stringArray" ]
+
+[types.booleanOrStringArray]
+oneof = [ "boolean", "types.stringArray" ]
+
+[types.numberOrNumberArray]
+oneof = [ "types.numberValue", "types.numberArray" ]
+
+[types.compatibilityDate]
+type = "string"
+pattern = '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+
+[types.workerName]
+type = "string"
+pattern = '^[A-Za-z0-9][A-Za-z0-9-]{0,254}$'
+
+[types.routeTable]
+type = "table"
+
+    [types.routeTable.pattern]
+    type = "string"
+
+    [types.routeTable.custom_domain]
+    type = "boolean"
+    optional = true
+
+    [types.routeTable.zone_id]
+    type = "string"
+    optional = true
+
+    [types.routeTable.zone_name]
+    type = "string"
+    optional = true
+
+[types.route]
+oneof = [ "string", "types.routeTable" ]
+
+[types.routes]
+type = "array"
+itemtype = "types.route"
+
+[types.triggers]
+type = "table"
+
+    [types.triggers.crons]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.observability]
+type = "table"
+
+    [types.observability.enabled]
+    type = "boolean"
+    optional = true
+
+    [types.observability.head_sampling_rate]
+    type = "types.numberValue"
+    optional = true
+
+    [types.observability.logs]
+    type = "types.observabilityLogs"
+    optional = true
+
+    [types.observability.traces]
+    type = "types.observabilityTraces"
+    optional = true
+
+[types.observabilityLogs]
+type = "table"
+
+    [types.observabilityLogs.enabled]
+    type = "boolean"
+    optional = true
+
+    [types.observabilityLogs.head_sampling_rate]
+    type = "types.numberValue"
+    optional = true
+
+    [types.observabilityLogs.invocation_logs]
+    type = "boolean"
+    optional = true
+
+    [types.observabilityLogs.persist]
+    type = "boolean"
+    optional = true
+
+    [types.observabilityLogs.destinations]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.observabilityTraces]
+type = "table"
+
+    [types.observabilityTraces.enabled]
+    type = "boolean"
+    optional = true
+
+    [types.observabilityTraces.head_sampling_rate]
+    type = "types.numberValue"
+    optional = true
+
+    [types.observabilityTraces.persist]
+    type = "boolean"
+    optional = true
+
+    [types.observabilityTraces.destinations]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.build]
+type = "table"
+
+    [types.build.command]
+    type = "string"
+    optional = true
+
+    [types.build.cwd]
+    type = "string"
+    optional = true
+
+    [types.build.watch_dir]
+    type = "types.stringOrStringArray"
+    optional = true
+
+[types.limits]
+type = "table"
+
+    [types.limits.cpu_ms]
+    type = "types.numberValue"
+    optional = true
+
+    [types.limits.subrequests]
+    type = "types.numberValue"
+    optional = true
+
+[types.placement]
+type = "table"
+
+    [types.placement.mode]
+    type = "string"
+    allowedvalues = [ "smart" ]
+    optional = true
+
+    [types.placement.region]
+    type = "string"
+    optional = true
+
+    [types.placement.host]
+    type = "string"
+    optional = true
+
+    [types.placement.hostname]
+    type = "string"
+    optional = true
+
+[types.assets]
+type = "table"
+
+    [types.assets.binding]
+    type = "string"
+    optional = true
+
+    [types.assets.directory]
+    type = "string"
+    optional = true
+
+    [types.assets.html_handling]
+    type = "string"
+    allowedvalues = [ "auto-trailing-slash", "force-trailing-slash", "drop-trailing-slash", "none" ]
+    optional = true
+
+    [types.assets.not_found_handling]
+    type = "string"
+    allowedvalues = [ "single-page-application", "404-page", "none" ]
+    optional = true
+
+    [types.assets.run_worker_first]
+    type = "types.booleanOrStringArray"
+    optional = true
+
+[types.moduleRule]
+
+    [types.moduleRule.type]
+    type = "string"
+    allowedvalues = [ "CommonJS", "CompiledWasm", "Data", "ESModule", "Text" ]
+
+    [types.moduleRule.globs]
+    type = "array"
+    itemtype = "string"
+
+    [types.moduleRule.fallthrough]
+    type = "boolean"
+    optional = true
+
+[types.rules]
+type = "array"
+itemtype = "types.moduleRule"
+
+[types.pythonModules]
+type = "table"
+
+    [types.pythonModules.excludes]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.dev]
+type = "table"
+
+    [types.dev.container_engine]
+    type = "string"
+    optional = true
+
+    [types.dev.enable_containers]
+    type = "boolean"
+    optional = true
+
+    [types.dev.generate_types]
+    type = "boolean"
+    optional = true
+
+    [types.dev.host]
+    type = "string"
+    optional = true
+
+    [types.dev.ip]
+    type = "types.ipAddress"
+    optional = true
+
+    [types.dev.local_protocol]
+    type = "string"
+    allowedvalues = [ "http", "https" ]
+    optional = true
+
+    [types.dev.port]
+    type = "integer"
+    min = 1
+    max = 65535
+    optional = true
+
+    [types.dev.upstream_protocol]
+    type = "string"
+    allowedvalues = [ "http", "https" ]
+    optional = true
+
+[types.kvNamespace]
+type = "table"
+
+    [types.kvNamespace.binding]
+    type = "string"
+
+    [types.kvNamespace.id]
+    type = "string"
+    optional = true
+
+    [types.kvNamespace.preview_id]
+    type = "string"
+    optional = true
+
+[types.kvNamespaces]
+type = "array"
+itemtype = "types.kvNamespace"
+
+[types.d1Database]
+type = "table"
+
+    [types.d1Database.binding]
+    type = "string"
+
+    [types.d1Database.database_id]
+    type = "string"
+    optional = true
+
+    [types.d1Database.database_name]
+    type = "string"
+    optional = true
+
+    [types.d1Database.migrations_dir]
+    type = "string"
+    optional = true
+
+    [types.d1Database.preview_database_id]
+    type = "string"
+    optional = true
+
+[types.d1Databases]
+type = "array"
+itemtype = "types.d1Database"
+
+[types.r2Bucket]
+type = "table"
+
+    [types.r2Bucket.binding]
+    type = "string"
+
+    [types.r2Bucket.bucket_name]
+    type = "string"
+    optional = true
+
+    [types.r2Bucket.jurisdiction]
+    type = "string"
+    optional = true
+
+    [types.r2Bucket.preview_bucket_name]
+    type = "string"
+    optional = true
+
+[types.r2Buckets]
+type = "array"
+itemtype = "types.r2Bucket"
+
+[types.simpleBinding]
+type = "table"
+
+    [types.simpleBinding.binding]
+    type = "string"
+
+[types.idBinding]
+
+    [types.idBinding.binding]
+    type = "string"
+
+    [types.idBinding.id]
+    type = "string"
+
+[types.namespaceBinding]
+
+    [types.namespaceBinding.binding]
+    type = "string"
+
+    [types.namespaceBinding.namespace]
+    type = "string"
+
+[types.aiSearchInstance]
+
+    [types.aiSearchInstance.binding]
+    type = "string"
+
+    [types.aiSearchInstance.instance_name]
+    type = "string"
+
+[types.indexBinding]
+
+    [types.indexBinding.binding]
+    type = "string"
+
+    [types.indexBinding.index_name]
+    type = "string"
+
+[types.datasetBinding]
+
+    [types.datasetBinding.binding]
+    type = "string"
+
+    [types.datasetBinding.dataset]
+    type = "string"
+    optional = true
+
+[types.serviceBinding]
+
+    [types.serviceBinding.binding]
+    type = "string"
+
+    [types.serviceBinding.service]
+    type = "string"
+
+    [types.serviceBinding.entrypoint]
+    type = "string"
+    optional = true
+
+[types.certificateBinding]
+
+    [types.certificateBinding.binding]
+    type = "string"
+
+    [types.certificateBinding.certificate_id]
+    type = "string"
+
+[types.workflowBinding]
+
+    [types.workflowBinding.binding]
+    type = "string"
+
+    [types.workflowBinding.class_name]
+    type = "string"
+
+    [types.workflowBinding.name]
+    type = "string"
+
+    [types.workflowBinding.script_name]
+    type = "string"
+    optional = true
+
+[types.dispatchOutbound]
+type = "table"
+
+    [types.dispatchOutbound.service]
+    type = "string"
+
+    [types.dispatchOutbound.parameters]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.dispatchNamespace]
+
+    [types.dispatchNamespace.binding]
+    type = "string"
+
+    [types.dispatchNamespace.namespace]
+    type = "string"
+
+    [types.dispatchNamespace.outbound]
+    type = "types.dispatchOutbound"
+    optional = true
+
+[types.durableObjectBinding]
+type = "table"
+
+    [types.durableObjectBinding.name]
+    type = "string"
+
+    [types.durableObjectBinding.class_name]
+    type = "string"
+
+    [types.durableObjectBinding.environment]
+    type = "string"
+    optional = true
+
+    [types.durableObjectBinding.script_name]
+    type = "string"
+    optional = true
+
+[types.durableObjects]
+type = "table"
+
+    [types.durableObjects.bindings]
+    type = "array"
+    itemtype = "types.durableObjectBinding"
+    optional = true
+
+[types.renameClass]
+type = "table"
+
+    [types.renameClass.from]
+    type = "string"
+
+    [types.renameClass.to]
+    type = "string"
+
+[types.migration]
+type = "table"
+
+    [types.migration.tag]
+    type = "string"
+
+    [types.migration.deleted_classes]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.migration.new_classes]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.migration.new_sqlite_classes]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.migration.renamed_classes]
+    type = "array"
+    itemtype = "types.renameClass"
+    optional = true
+
+    [types.migration.transferred_classes]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.migrations]
+type = "array"
+itemtype = "types.migration"
+
+[types.emailBinding]
+type = "table"
+
+    [types.emailBinding.name]
+    type = "string"
+
+    [types.emailBinding.allowed_destination_addresses]
+    type = "types.emailArray"
+    optional = true
+
+    [types.emailBinding.destination_address]
+    type = "types.email"
+    optional = true
+
+[types.queueProducer]
+
+    [types.queueProducer.binding]
+    type = "string"
+
+    [types.queueProducer.delivery_delay]
+    type = "types.numberValue"
+    optional = true
+
+    [types.queueProducer.queue]
+    type = "string"
+
+[types.queueConsumer]
+type = "table"
+
+    [types.queueConsumer.queue]
+    type = "string"
+
+    [types.queueConsumer.dead_letter_queue]
+    type = "string"
+    optional = true
+
+    [types.queueConsumer.max_batch_size]
+    type = "types.numberValue"
+    optional = true
+
+    [types.queueConsumer.max_batch_timeout]
+    type = "types.numberValue"
+    optional = true
+
+    [types.queueConsumer.max_concurrency]
+    type = "types.numberValue"
+    optional = true
+
+    [types.queueConsumer.max_retries]
+    type = "types.numberValue"
+    optional = true
+
+    [types.queueConsumer.retry_delay]
+    type = "types.numberValue"
+    optional = true
+
+[types.queues]
+type = "table"
+
+    [types.queues.consumers]
+    type = "array"
+    itemtype = "types.queueConsumer"
+    optional = true
+
+    [types.queues.producers]
+    type = "array"
+    itemtype = "types.queueProducer"
+    optional = true
+
+[types.secrets]
+type = "table"
+
+    [types.secrets.required]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.secretsStoreSecret]
+
+    [types.secretsStoreSecret.binding]
+    type = "string"
+
+    [types.secretsStoreSecret.store_id]
+    type = "string"
+    optional = true
+
+    [types.secretsStoreSecret.secret_name]
+    type = "string"
+    optional = true
+
+[types.site]
+type = "table"
+
+    [types.site.bucket]
+    type = "string"
+
+    [types.site.exclude]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.site.include]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.instanceType]
+type = "table"
+
+    [types.instanceType.disk_mb]
+    type = "types.numberValue"
+    optional = true
+
+    [types.instanceType.memory_mib]
+    type = "types.numberValue"
+    optional = true
+
+    [types.instanceType.vcpu]
+    type = "types.numberValue"
+    optional = true
+
+[types.namedInstanceType]
+type = "string"
+allowedvalues = [ "lite", "basic", "standard-1", "standard-2", "standard-3", "standard-4" ]
+
+[types.containerInstanceType]
+oneof = [ "types.namedInstanceType", "types.instanceType" ]
+
+[types.ssh]
+type = "table"
+
+    [types.ssh.enabled]
+    type = "boolean"
+    optional = true
+
+    [types.ssh.port]
+    type = "integer"
+    min = 1
+    max = 65535
+    optional = true
+
+[types.authorizedKey]
+type = "table"
+
+    [types.authorizedKey.name]
+    type = "string"
+
+    [types.authorizedKey.public_key]
+    type = "string"
+
+[types.containerConstraints]
+type = "table"
+
+    [types.containerConstraints.jurisdiction]
+    type = "string"
+    allowedvalues = [ "eu", "fedramp" ]
+    optional = true
+
+    [types.containerConstraints.regions]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.container]
+type = "table"
+
+    [types.container.class_name]
+    type = "string"
+
+    [types.container.image]
+    type = "string"
+
+    [types.container.authorized_keys]
+    type = "array"
+    itemtype = "types.authorizedKey"
+    optional = true
+
+    [types.container.constraints]
+    type = "types.containerConstraints"
+    optional = true
+
+    [types.container.image_build_context]
+    type = "string"
+    optional = true
+
+    [types.container.image_vars]
+    type = "types.stringMap"
+    optional = true
+
+    [types.container.instance_type]
+    type = "types.containerInstanceType"
+    optional = true
+
+    [types.container.max_instances]
+    type = "types.numberValue"
+    optional = true
+
+    [types.container.name]
+    type = "string"
+    optional = true
+
+    [types.container.rollout_active_grace_period]
+    type = "types.numberValue"
+    optional = true
+
+    [types.container.rollout_step_percentage]
+    type = "types.numberOrNumberArray"
+    optional = true
+
+    [types.container.ssh]
+    type = "types.ssh"
+    optional = true
+
+    [types.container.wrangler_ssh]
+    type = "types.ssh"
+    optional = true
+
+[types.containers]
+type = "array"
+itemtype = "types.container"
+
+[types.arrayOfIdBindings]
+type = "array"
+itemtype = "types.idBinding"
+
+[types.arrayOfNamespaceBindings]
+type = "array"
+itemtype = "types.namespaceBinding"
+
+[types.arrayOfIndexBindings]
+type = "array"
+itemtype = "types.indexBinding"
+
+[types.arrayOfDatasetBindings]
+type = "array"
+itemtype = "types.datasetBinding"
+
+[types.arrayOfServiceBindings]
+type = "array"
+itemtype = "types.serviceBinding"
+
+[types.arrayOfCertificateBindings]
+type = "array"
+itemtype = "types.certificateBinding"
+
+[types.arrayOfWorkflowBindings]
+type = "array"
+itemtype = "types.workflowBinding"
+
+[types.arrayOfDispatchNamespaces]
+type = "array"
+itemtype = "types.dispatchNamespace"
+
+[types.arrayOfEmailBindings]
+type = "array"
+itemtype = "types.emailBinding"
+
+[types.arrayOfSecretsStoreSecrets]
+type = "array"
+itemtype = "types.secretsStoreSecret"
+
+[types.workerSettings]
+type = "collection"
+itemtype = "any"
+mutuallyexclusive = [ [ "route", "routes" ] ]
+
+    [types.workerSettings.account_id]
+    type = "string"
+    optional = true
+
+    [types.workerSettings.ai]
+    type = "types.simpleBinding"
+    optional = true
+
+    [types.workerSettings.ai_search]
+    type = "array"
+    itemtype = "types.aiSearchInstance"
+    optional = true
+
+    [types.workerSettings.ai_search_namespaces]
+    type = "types.arrayOfNamespaceBindings"
+    optional = true
+
+    [types.workerSettings.alias]
+    type = "types.stringMap"
+    optional = true
+
+    [types.workerSettings.analytics_engine_datasets]
+    type = "types.arrayOfDatasetBindings"
+    optional = true
+
+    [types.workerSettings.assets]
+    type = "types.assets"
+    optional = true
+
+    [types.workerSettings.base_dir]
+    type = "string"
+    optional = true
+
+    [types.workerSettings.browser]
+    type = "types.simpleBinding"
+    optional = true
+
+    [types.workerSettings.build]
+    type = "types.build"
+    optional = true
+
+    [types.workerSettings.compatibility_date]
+    type = "types.compatibilityDate"
+    optional = true
+
+    [types.workerSettings.compatibility_flags]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.workerSettings.containers]
+    type = "types.containers"
+    optional = true
+
+    [types.workerSettings.d1_databases]
+    type = "types.d1Databases"
+    optional = true
+
+    [types.workerSettings.define]
+    type = "types.stringMap"
+    optional = true
+
+    [types.workerSettings.dev]
+    type = "types.dev"
+    optional = true
+
+    [types.workerSettings.dispatch_namespaces]
+    type = "types.arrayOfDispatchNamespaces"
+    optional = true
+
+    [types.workerSettings.durable_objects]
+    type = "types.durableObjects"
+    optional = true
+
+    [types.workerSettings.find_additional_modules]
+    type = "boolean"
+    optional = true
+
+    [types.workerSettings.hyperdrive]
+    type = "types.arrayOfIdBindings"
+    optional = true
+
+    [types.workerSettings.images]
+    type = "types.simpleBinding"
+    optional = true
+
+    [types.workerSettings.keep_names]
+    type = "boolean"
+    optional = true
+
+    [types.workerSettings.kv_namespaces]
+    type = "types.kvNamespaces"
+    optional = true
+
+    [types.workerSettings.limits]
+    type = "types.limits"
+    optional = true
+
+    [types.workerSettings.logpush]
+    type = "boolean"
+    optional = true
+
+    [types.workerSettings.main]
+    type = "string"
+    optional = true
+
+    [types.workerSettings.minify]
+    type = "boolean"
+    optional = true
+
+    [types.workerSettings.mtls_certificates]
+    type = "types.arrayOfCertificateBindings"
+    optional = true
+
+    [types.workerSettings.name]
+    type = "types.workerName"
+    optional = true
+
+    [types.workerSettings.no_bundle]
+    type = "boolean"
+    optional = true
+
+    [types.workerSettings.observability]
+    type = "types.observability"
+    optional = true
+
+    [types.workerSettings.placement]
+    type = "types.placement"
+    optional = true
+
+    [types.workerSettings.preserve_file_names]
+    type = "boolean"
+    optional = true
+
+    [types.workerSettings.preview_urls]
+    type = "boolean"
+    optional = true
+
+    [types.workerSettings.python_modules]
+    type = "types.pythonModules"
+    optional = true
+
+    [types.workerSettings.queues]
+    type = "types.queues"
+    optional = true
+
+    [types.workerSettings.r2_buckets]
+    type = "types.r2Buckets"
+    optional = true
+
+    [types.workerSettings.route]
+    type = "types.route"
+    optional = true
+
+    [types.workerSettings.routes]
+    type = "types.routes"
+    optional = true
+
+    [types.workerSettings.rules]
+    type = "types.rules"
+    optional = true
+
+    [types.workerSettings.secrets]
+    type = "types.secrets"
+    optional = true
+
+    [types.workerSettings.secrets_store_secrets]
+    type = "types.arrayOfSecretsStoreSecrets"
+    optional = true
+
+    [types.workerSettings.send_email]
+    type = "types.arrayOfEmailBindings"
+    optional = true
+
+    [types.workerSettings.services]
+    type = "types.arrayOfServiceBindings"
+    optional = true
+
+    [types.workerSettings.tail_consumers]
+    type = "types.arrayOfServiceBindings"
+    optional = true
+
+    [types.workerSettings.triggers]
+    type = "types.triggers"
+    optional = true
+
+    [types.workerSettings.tsconfig]
+    type = "string"
+    optional = true
+
+    [types.workerSettings.upload_source_maps]
+    type = "boolean"
+    optional = true
+
+    [types.workerSettings.vars]
+    type = "types.anyMap"
+    optional = true
+
+    [types.workerSettings.vectorize]
+    type = "types.arrayOfIndexBindings"
+    optional = true
+
+    [types.workerSettings.workers_dev]
+    type = "boolean"
+    optional = true
+
+    [types.workerSettings.workflows]
+    type = "types.arrayOfWorkflowBindings"
+    optional = true
+
+[types.env]
+type = "collection"
+itemtype = "types.workerSettings"
+
+[elements]
+
+[elements.name]
+type = "types.workerName"
+
+[elements.main]
+type = "string"
+description = "Worker entrypoint; optional for assets-only Workers."
+optional = true
+
+[elements.compatibility_date]
+type = "types.compatibilityDate"
+
+[elements.account_id]
+type = "string"
+optional = true
+
+[elements.ai]
+type = "types.simpleBinding"
+optional = true
+
+[elements.ai_search]
+type = "array"
+itemtype = "types.aiSearchInstance"
+optional = true
+
+[elements.ai_search_namespaces]
+type = "types.arrayOfNamespaceBindings"
+optional = true
+
+[elements.alias]
+type = "types.stringMap"
+optional = true
+
+[elements.analytics_engine_datasets]
+type = "types.arrayOfDatasetBindings"
+optional = true
+
+[elements.assets]
+type = "types.assets"
+optional = true
+
+[elements.base_dir]
+type = "string"
+optional = true
+
+[elements.browser]
+type = "types.simpleBinding"
+optional = true
+
+[elements.build]
+type = "types.build"
+optional = true
+
+[elements.compatibility_flags]
+type = "array"
+itemtype = "string"
+optional = true
+
+[elements.containers]
+type = "types.containers"
+optional = true
+
+[elements.d1_databases]
+type = "types.d1Databases"
+optional = true
+
+[elements.define]
+type = "types.stringMap"
+optional = true
+
+[elements.dev]
+type = "types.dev"
+optional = true
+
+[elements.dispatch_namespaces]
+type = "types.arrayOfDispatchNamespaces"
+optional = true
+
+[elements.durable_objects]
+type = "types.durableObjects"
+optional = true
+
+[elements.env]
+type = "types.env"
+optional = true
+
+[elements.find_additional_modules]
+type = "boolean"
+optional = true
+
+[elements.hyperdrive]
+type = "types.arrayOfIdBindings"
+optional = true
+
+[elements.images]
+type = "types.simpleBinding"
+optional = true
+
+[elements.keep_names]
+type = "boolean"
+optional = true
+
+[elements.keep_vars]
+type = "boolean"
+optional = true
+
+[elements.kv_namespaces]
+type = "types.kvNamespaces"
+optional = true
+
+[elements.limits]
+type = "types.limits"
+optional = true
+
+[elements.logpush]
+type = "boolean"
+optional = true
+
+[elements.migrations]
+type = "types.migrations"
+optional = true
+
+[elements.minify]
+type = "boolean"
+optional = true
+
+[elements.mtls_certificates]
+type = "types.arrayOfCertificateBindings"
+optional = true
+
+[elements.no_bundle]
+type = "boolean"
+optional = true
+
+[elements.observability]
+type = "types.observability"
+optional = true
+
+[elements.placement]
+type = "types.placement"
+optional = true
+
+[elements.preserve_file_names]
+type = "boolean"
+optional = true
+
+[elements.preview_urls]
+type = "boolean"
+optional = true
+
+[elements.python_modules]
+type = "types.pythonModules"
+optional = true
+
+[elements.queues]
+type = "types.queues"
+optional = true
+
+[elements.r2_buckets]
+type = "types.r2Buckets"
+optional = true
+
+[elements.route]
+type = "types.route"
+optional = true
+
+[elements.routes]
+type = "types.routes"
+optional = true
+
+[elements.rules]
+type = "types.rules"
+optional = true
+
+[elements.secrets]
+type = "types.secrets"
+optional = true
+
+[elements.secrets_store_secrets]
+type = "types.arrayOfSecretsStoreSecrets"
+optional = true
+
+[elements.send_email]
+type = "types.arrayOfEmailBindings"
+optional = true
+
+[elements.send_metrics]
+type = "boolean"
+optional = true
+
+[elements.services]
+type = "types.arrayOfServiceBindings"
+optional = true
+
+[elements.site]
+type = "types.site"
+optional = true
+
+[elements.tail_consumers]
+type = "types.arrayOfServiceBindings"
+optional = true
+
+[elements.triggers]
+type = "types.triggers"
+optional = true
+
+[elements.tsconfig]
+type = "string"
+optional = true
+
+[elements.upload_source_maps]
+type = "boolean"
+optional = true
+
+[elements.vars]
+type = "types.anyMap"
+optional = true
+
+[elements.vectorize]
+type = "types.arrayOfIndexBindings"
+optional = true
+
+[elements.workers_dev]
+type = "boolean"
+optional = true
+
+[elements.workflows]
+type = "types.arrayOfWorkflowBindings"
+optional = true

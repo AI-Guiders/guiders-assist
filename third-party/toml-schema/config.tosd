@@ -1,0 +1,157 @@
+# SCHEMA: config.tosd
+
+[toml-schema]
+version = "1.0.0"
+
+[types]
+
+    [types.databaseType]
+    type = "table"
+
+        [types.databaseType.server]
+        type = "string"
+        format = "ipv4"
+
+        [types.databaseType.ports]
+        type = "array"
+        itemtype = "integer"
+
+        [types.databaseType.connection_max]
+        type = "integer"
+
+        [types.databaseType.enabled]
+        type = "boolean"
+
+    [types.serverType]
+    type = "table"
+
+        [types.serverType.ip]
+        type = "string"
+        format = "ipv4"
+
+        [types.serverType.dc]
+        type = "string"
+
+        [types.serverType.firewall]
+        type = "table"
+        optional = true
+
+            [types.serverType.firewall.inbound]
+            type = "string"
+
+            [types.serverType.firewall.outbound]
+            type = "string"
+
+        [types.serverType.maindb]
+        type = "types.databaseType"
+        optional = true
+
+        [types.serverType.sharding]
+        type = "collection"
+        itemtype = "types.databaseType"
+        optional = true
+        minlength = 1
+
+        [types.serverType.replicas]
+        type = "types.listOfServersType"
+        optional = true
+
+    [types.serverGroupType]
+    type = "table"
+
+        [types.serverGroupType.groupname]
+        type = "string"
+        pattern = "[a-zA-Z0-9]*"
+
+        [types.serverGroupType.servers]
+        type = "types.listOfServersType"
+
+    [types.listOfServersType]
+    type = "collection"
+    itemtype = "types.serverType"
+    minlength = 1
+    keypattern = "^[a-zA-Z][a-zA-Z0-9_]*$"
+
+    [types.listOfServerGroupsType]
+    type = "collection"
+    itemtype = "types.serverGroupType"
+    minlength = 1
+
+    [types.libraryType]
+    type = "table"
+
+        [types.libraryType.name]
+        type = "string"
+
+        [types.libraryType.version]
+        type = "string"
+
+    [types.productType]
+    type = "table"
+
+        [types.productType.name]
+        type = "string"
+
+        [types.productType.sku]
+        type = "integer"
+
+        [types.productType.color]
+        type = "string"
+        optional = true
+
+    [types.pointType]
+    type = "table"
+
+        [types.pointType.x]
+        type = "integer"
+
+        [types.pointType.y]
+        type = "integer"
+
+        [types.pointType.z]
+        type = "integer"
+        optional = true
+
+[elements]
+
+    [elements.title]
+    type = "string"
+
+    [elements.owner]
+    type = "table"
+
+        [elements.owner.name]
+        type = "string"
+
+        [elements.owner.dob]
+        type = "offset-date-time"
+
+    [elements.database]
+    type = "types.databaseType"
+
+    [elements.serverGroups]
+    type = "types.listOfServerGroupsType"
+
+    [elements.clients]
+    type = "table"
+
+        [elements.clients.data]
+        type = "array"
+        itemtype = "array"
+
+        [elements.clients.hosts]
+        type = "array"
+        itemtype = "string"
+
+        [elements.clients.points]
+        type = "array"
+        itemtype = "types.pointType"
+
+    [elements.libraries]
+    type = "collection"
+    itemtype = "types.libraryType"
+
+    [elements.products]
+    type = "array"
+    itemtype = "types.productType"
+    minlength = 1

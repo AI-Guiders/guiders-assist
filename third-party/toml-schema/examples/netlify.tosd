@@ -1,0 +1,483 @@
+# Based on https://docs.netlify.com/build/configure-builds/file-based-configuration/
+
+[toml-schema]
+version = "1.0.0"
+
+[types.stringArray]
+type = "array"
+itemtype = "string"
+
+[types.stringMap]
+type = "collection"
+itemtype = "string"
+
+[types.anyMap]
+type = "collection"
+itemtype = "any"
+
+[types.stringOrStringArray]
+oneof = [ "string", "types.stringArray" ]
+
+[types.httpMethod]
+type = "string"
+allowedvalues = [ "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS" ]
+
+[types.httpMethodArray]
+type = "array"
+itemtype = "string"
+allowedvalues = [ "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS" ]
+
+[types.httpMethodOrArray]
+oneof = [ "types.httpMethod", "types.httpMethodArray" ]
+
+[types.environment]
+type = "types.stringMap"
+
+[types.processing]
+type = "table"
+
+    [types.processing.skip_processing]
+    type = "boolean"
+    optional = true
+
+    [types.processing.css]
+    type = "table"
+    optional = true
+
+        [types.processing.css.bundle]
+        type = "boolean"
+        optional = true
+
+        [types.processing.css.minify]
+        type = "boolean"
+        optional = true
+
+    [types.processing.js]
+    type = "table"
+    optional = true
+
+        [types.processing.js.bundle]
+        type = "boolean"
+        optional = true
+
+        [types.processing.js.minify]
+        type = "boolean"
+        optional = true
+
+    [types.processing.html]
+    type = "table"
+    optional = true
+
+        [types.processing.html.pretty_urls]
+        type = "boolean"
+        optional = true
+
+    [types.processing.images]
+    type = "table"
+    optional = true
+
+        [types.processing.images.compress]
+        type = "boolean"
+        optional = true
+
+[types.build]
+type = "table"
+
+    [types.build.base]
+    type = "string"
+    optional = true
+
+    [types.build.publish]
+    type = "string"
+    optional = true
+
+    [types.build.command]
+    type = "string"
+    optional = true
+
+    [types.build.ignore]
+    type = "string"
+    optional = true
+
+    [types.build.functions]
+    type = "string"
+    optional = true
+
+    [types.build.edge_functions]
+    type = "string"
+    optional = true
+
+    [types.build.environment]
+    type = "types.environment"
+    optional = true
+
+    [types.build.processing]
+    type = "types.processing"
+    optional = true
+
+[types.plugin]
+type = "table"
+
+    [types.plugin.package]
+    type = "string"
+
+    [types.plugin.inputs]
+    type = "types.anyMap"
+    optional = true
+
+[types.plugins]
+type = "array"
+itemtype = "types.plugin"
+
+[types.integration]
+type = "table"
+
+    [types.integration.name]
+    type = "string"
+
+    [types.integration.config]
+    type = "types.anyMap"
+    optional = true
+
+[types.integrations]
+type = "array"
+itemtype = "types.integration"
+
+[types.context]
+type = "table"
+
+    [types.context.base]
+    type = "string"
+    optional = true
+
+    [types.context.publish]
+    type = "string"
+    optional = true
+
+    [types.context.command]
+    type = "string"
+    optional = true
+
+    [types.context.ignore]
+    type = "string"
+    optional = true
+
+    [types.context.functions]
+    type = "string"
+    optional = true
+
+    [types.context.edge_functions]
+    type = "string"
+    optional = true
+
+    [types.context.environment]
+    type = "types.environment"
+    optional = true
+
+    [types.context.processing]
+    type = "types.processing"
+    optional = true
+
+    [types.context.plugins]
+    type = "types.plugins"
+    optional = true
+
+[types.contexts]
+type = "collection"
+itemtype = "types.context"
+
+[types.redirectCondition]
+oneof = [ "string", "types.stringArray" ]
+
+[types.redirectConditions]
+type = "collection"
+itemtype = "types.redirectCondition"
+
+[types.redirect]
+type = "table"
+
+    [types.redirect.from]
+    type = "string"
+
+    [types.redirect.to]
+    type = "string"
+
+    [types.redirect.status]
+    type = "integer"
+    min = 100
+    max = 599
+    optional = true
+
+    [types.redirect.force]
+    type = "boolean"
+    optional = true
+
+    [types.redirect.query]
+    type = "types.stringMap"
+    optional = true
+
+    [types.redirect.conditions]
+    type = "types.redirectConditions"
+    optional = true
+
+    [types.redirect.headers]
+    type = "types.stringMap"
+    optional = true
+
+    [types.redirect.signed]
+    type = "string"
+    optional = true
+
+[types.redirects]
+type = "array"
+itemtype = "types.redirect"
+
+[types.header]
+type = "table"
+
+    [types.header.for]
+    type = "string"
+
+    [types.header.values]
+    type = "types.stringMap"
+
+[types.headers]
+type = "array"
+itemtype = "types.header"
+
+[types.functionConfig]
+type = "table"
+
+    [types.functionConfig.node_bundler]
+    type = "string"
+    allowedvalues = [ "esbuild", "zisi" ]
+    optional = true
+
+    [types.functionConfig.external_node_modules]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.functionConfig.included_files]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.functionConfig.excluded_files]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.functions]
+type = "collection"
+itemtype = "types.functionConfig"
+
+    [types.functions.directory]
+    type = "string"
+    optional = true
+
+    [types.functions.node_bundler]
+    type = "string"
+    allowedvalues = [ "esbuild", "zisi" ]
+    optional = true
+
+    [types.functions.external_node_modules]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.functions.included_files]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.functions.excluded_files]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.edgeHeaderCondition]
+oneof = [ "string", "boolean" ]
+
+[types.edgeHeaderConditions]
+type = "collection"
+itemtype = "types.edgeHeaderCondition"
+
+[types.edgeFunction]
+type = "table"
+
+    [types.edgeFunction.function]
+    type = "string"
+
+    [types.edgeFunction.path]
+    type = "types.stringOrStringArray"
+    optional = true
+
+    [types.edgeFunction.excludedPath]
+    type = "types.stringOrStringArray"
+    optional = true
+
+    [types.edgeFunction.pattern]
+    type = "string"
+    optional = true
+
+    [types.edgeFunction.excludedPattern]
+    type = "types.stringOrStringArray"
+    optional = true
+
+    [types.edgeFunction.method]
+    type = "types.httpMethodOrArray"
+    optional = true
+
+    [types.edgeFunction.header]
+    type = "types.edgeHeaderConditions"
+    optional = true
+
+    [types.edgeFunction.cache]
+    type = "string"
+    allowedvalues = [ "manual" ]
+    optional = true
+
+[types.edgeFunctions]
+type = "array"
+itemtype = "types.edgeFunction"
+
+[types.devHttps]
+type = "table"
+
+    [types.devHttps.certFile]
+    type = "string"
+    optional = true
+
+    [types.devHttps.keyFile]
+    type = "string"
+    optional = true
+
+[types.dev]
+type = "table"
+
+    [types.dev.command]
+    type = "string"
+    optional = true
+
+    [types.dev.port]
+    type = "integer"
+    min = 1
+    max = 65535
+    optional = true
+
+    [types.dev.targetPort]
+    type = "integer"
+    min = 1
+    max = 65535
+    optional = true
+
+    [types.dev.functionsPort]
+    type = "integer"
+    min = 1
+    max = 65535
+    optional = true
+
+    [types.dev.publish]
+    type = "string"
+    optional = true
+
+    [types.dev.jwtRolePath]
+    type = "string"
+    optional = true
+
+    [types.dev.jwtSecret]
+    type = "string"
+    optional = true
+
+    [types.dev.autoLaunch]
+    type = "boolean"
+    optional = true
+
+    [types.dev.framework]
+    type = "string"
+    optional = true
+
+    [types.dev.functions]
+    type = "string"
+    optional = true
+
+    [types.dev.envFiles]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.dev.https]
+    type = "types.devHttps"
+    optional = true
+
+[types.template]
+type = "table"
+
+    [types.template."incoming-hooks"]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.template."required-extensions"]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.template.environment]
+    type = "types.environment"
+    optional = true
+
+[types.images]
+type = "table"
+
+    [types.images.remote_images]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[elements]
+
+[elements.build]
+type = "types.build"
+optional = true
+
+[elements.context]
+type = "types.contexts"
+optional = true
+
+[elements.plugins]
+type = "types.plugins"
+optional = true
+
+[elements.integrations]
+type = "types.integrations"
+optional = true
+
+[elements.redirects]
+type = "types.redirects"
+optional = true
+
+[elements.headers]
+type = "types.headers"
+optional = true
+
+[elements.functions]
+type = "types.functions"
+optional = true
+
+[elements.edge_functions]
+type = "types.edgeFunctions"
+optional = true
+
+[elements.dev]
+type = "types.dev"
+optional = true
+
+[elements.template]
+type = "types.template"
+optional = true
+
+[elements.images]
+type = "types.images"
+optional = true

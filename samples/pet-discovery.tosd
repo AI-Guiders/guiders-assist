@@ -1,0 +1,19 @@
+[toml-schema]
+version = "1.0.0"
+
+[elements]
+
+    [elements.document]
+    type = "table"
+
+        [elements.document.name]
+        type = "string"
+
+        [elements.document.version]
+        type = "string"
+        pattern = "^[0-9]+[.][0-9]+[.][0-9]+$"
+
+        [elements.document.tags]
+        type = "array"
+        itemtype = "string"
+        optional = true

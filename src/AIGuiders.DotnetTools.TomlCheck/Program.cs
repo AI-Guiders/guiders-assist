@@ -34,12 +34,18 @@ internal static class Program
 
     private static void PrintUsage()
     {
-        Console.WriteLine("aig-toml-check — validate TOML with JSON Schema");
+        Console.WriteLine("aig-toml-check — validate TOML with TOML Schema (.tosd) or JSON Schema");
         Console.WriteLine();
         Console.WriteLine("Usage:");
-        Console.WriteLine("  aig-toml-check check <path...> [--schema <file.json>]");
+        Console.WriteLine("  aig-toml-check check <path...> [--schema <file.tosd|file.json>]");
         Console.WriteLine();
-        Console.WriteLine("Each TOML may declare a schema in the header:");
-        Console.WriteLine("  #:schema ../docs/schemas/example.schema.json");
+        Console.WriteLine("Schema resolution (first match wins):");
+        Console.WriteLine("  1. --schema override");
+        Console.WriteLine("  2. #:schema directive in the first 32 lines");
+        Console.WriteLine("  3. [toml-schema].location in the document");
+        Console.WriteLine();
+        Console.WriteLine("Examples:");
+        Console.WriteLine("  #:schema config.tosd");
+        Console.WriteLine("  #:schema catalog.schema.json");
     }
 }

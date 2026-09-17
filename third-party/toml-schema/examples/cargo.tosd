@@ -1,0 +1,522 @@
+# Based on https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[toml-schema]
+version = "1.0.0"
+
+[types.stringArray]
+type = "array"
+itemtype = "string"
+
+[types.workspaceInherited]
+type = "table"
+
+    [types.workspaceInherited.workspace]
+    type = "boolean"
+
+[types.stringOrWorkspace]
+oneof = [ "string", "types.workspaceInherited" ]
+
+[types.uri]
+type = "string"
+format = "uri"
+
+[types.documentationOrWorkspace]
+oneof = [ "types.uri", "types.workspaceInherited" ]
+
+[types.homepageOrWorkspace]
+oneof = [ "types.uri", "types.workspaceInherited" ]
+
+[types.stringArrayOrWorkspace]
+oneof = [ "types.stringArray", "types.workspaceInherited" ]
+
+[types.stringOrBoolean]
+oneof = [ "string", "boolean" ]
+
+[types.stringOrBooleanOrWorkspace]
+oneof = [ "string", "boolean", "types.workspaceInherited" ]
+
+[types.publish]
+oneof = [ "boolean", "types.stringArray", "types.workspaceInherited" ]
+
+[types.packageBase]
+type = "table"
+
+    [types.packageBase.version]
+    type = "types.stringOrWorkspace"
+    optional = true
+
+    [types.packageBase.authors]
+    type = "types.stringArrayOrWorkspace"
+    optional = true
+
+    [types.packageBase.edition]
+    type = "types.stringOrWorkspace"
+    optional = true
+
+    [types.packageBase.rust-version]
+    type = "types.stringOrWorkspace"
+    optional = true
+
+    [types.packageBase.description]
+    type = "types.stringOrWorkspace"
+    optional = true
+
+    [types.packageBase.documentation]
+    type = "types.documentationOrWorkspace"
+    optional = true
+
+    [types.packageBase.readme]
+    type = "types.stringOrBooleanOrWorkspace"
+    optional = true
+
+    [types.packageBase.homepage]
+    type = "types.homepageOrWorkspace"
+    optional = true
+
+    [types.packageBase.repository]
+    type = "types.stringOrWorkspace"
+    optional = true
+
+    [types.packageBase.license]
+    type = "types.stringOrWorkspace"
+    optional = true
+
+    [types.packageBase.license-file]
+    type = "types.stringOrWorkspace"
+    optional = true
+
+    [types.packageBase.keywords]
+    type = "types.stringArrayOrWorkspace"
+    optional = true
+
+    [types.packageBase.categories]
+    type = "types.stringArrayOrWorkspace"
+    optional = true
+
+    [types.packageBase.exclude]
+    type = "types.stringArrayOrWorkspace"
+    optional = true
+
+    [types.packageBase.include]
+    type = "types.stringArrayOrWorkspace"
+    optional = true
+
+    [types.packageBase.publish]
+    type = "types.publish"
+    optional = true
+
+[types.package]
+type = "table"
+allof = [ "types.packageBase" ]
+
+    [types.package.name]
+    type = "string"
+
+    [types.package.workspace]
+    type = "string"
+    optional = true
+
+    [types.package.build]
+    type = "types.stringOrBoolean"
+    optional = true
+
+    [types.package.links]
+    type = "string"
+    optional = true
+
+    [types.package.metadata]
+    type = "table"
+    optional = true
+
+    [types.package.default-run]
+    type = "string"
+    optional = true
+
+    [types.package.autolib]
+    type = "boolean"
+    optional = true
+
+    [types.package.autobins]
+    type = "boolean"
+    optional = true
+
+    [types.package.autoexamples]
+    type = "boolean"
+    optional = true
+
+    [types.package.autotests]
+    type = "boolean"
+    optional = true
+
+    [types.package.autobenches]
+    type = "boolean"
+    optional = true
+
+    [types.package.resolver]
+    type = "string"
+    optional = true
+
+[types.target]
+type = "table"
+
+    [types.target.name]
+    type = "string"
+    optional = true
+
+    [types.target.path]
+    type = "string"
+    optional = true
+
+    [types.target.test]
+    type = "boolean"
+    optional = true
+
+    [types.target.doctest]
+    type = "boolean"
+    optional = true
+
+    [types.target.bench]
+    type = "boolean"
+    optional = true
+
+    [types.target.doc]
+    type = "boolean"
+    optional = true
+
+    [types.target.plugin]
+    type = "boolean"
+    optional = true
+
+    [types.target.proc-macro]
+    type = "boolean"
+    optional = true
+
+    [types.target.harness]
+    type = "boolean"
+    optional = true
+
+    [types.target.crate-type]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.target.required-features]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.target.edition]
+    type = "string"
+    optional = true
+
+[types.dependency]
+oneof = [ "string", "types.dependencyTable" ]
+
+[types.dependencyTable]
+type = "table"
+dependentrequired = { branch = [ "git" ], tag = [ "git" ], rev = [ "git" ] }
+mutuallyexclusive = [ [ "git", "path" ], [ "branch", "tag", "rev" ] ]
+
+    [types.dependencyTable.version]
+    type = "string"
+    optional = true
+
+    [types.dependencyTable.registry]
+    type = "string"
+    optional = true
+
+    [types.dependencyTable.git]
+    type = "string"
+    optional = true
+
+    [types.dependencyTable.branch]
+    type = "string"
+    optional = true
+
+    [types.dependencyTable.tag]
+    type = "string"
+    optional = true
+
+    [types.dependencyTable.rev]
+    type = "string"
+    optional = true
+
+    [types.dependencyTable.path]
+    type = "string"
+    optional = true
+
+    [types.dependencyTable.package]
+    type = "string"
+    optional = true
+
+    [types.dependencyTable.default-features]
+    type = "boolean"
+    optional = true
+    default = true
+
+    [types.dependencyTable.features]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.dependencyTable.workspace]
+    type = "boolean"
+    optional = true
+
+    [types.dependencyTable.public]
+    type = "boolean"
+    optional = true
+
+    [types.dependencyTable.optional]
+    type = "boolean"
+    optional = true
+
+[types.dependencyCollection]
+type = "collection"
+itemtype = "types.dependency"
+
+[types.targetDependencies]
+type = "table"
+
+    [types.targetDependencies.dependencies]
+    type = "types.dependencyCollection"
+    optional = true
+
+    [types.targetDependencies.dev-dependencies]
+    type = "types.dependencyCollection"
+    optional = true
+
+    [types.targetDependencies.build-dependencies]
+    type = "types.dependencyCollection"
+    optional = true
+
+[types.lintValue]
+oneof = [ "string", "types.lintTable" ]
+
+[types.lintTable]
+type = "table"
+
+    [types.lintTable.level]
+    type = "string"
+
+    [types.lintTable.priority]
+    type = "integer"
+    optional = true
+
+    [types.lintTable.check-cfg]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+[types.lintGroup]
+type = "collection"
+itemtype = "types.lintValue"
+
+[types.lints]
+type = "collection"
+itemtype = "types.lintGroup"
+
+    [types.lints.workspace]
+    type = "boolean"
+    optional = true
+
+[types.profileOptLevel]
+oneof = [ "integer", "string" ]
+
+[types.profileDebug]
+oneof = [ "boolean", "integer", "string" ]
+
+[types.profileStrip]
+oneof = [ "boolean", "string" ]
+
+[types.profileLto]
+oneof = [ "boolean", "string" ]
+
+[types.profileSettings]
+type = "table"
+
+    [types.profileSettings.inherits]
+    type = "string"
+    optional = true
+
+    [types.profileSettings.opt-level]
+    type = "types.profileOptLevel"
+    optional = true
+
+    [types.profileSettings.debug]
+    type = "types.profileDebug"
+    optional = true
+
+    [types.profileSettings.split-debuginfo]
+    type = "string"
+    optional = true
+
+    [types.profileSettings.strip]
+    type = "types.profileStrip"
+    optional = true
+
+    [types.profileSettings.debug-assertions]
+    type = "boolean"
+    optional = true
+
+    [types.profileSettings.overflow-checks]
+    type = "boolean"
+    optional = true
+
+    [types.profileSettings.lto]
+    type = "types.profileLto"
+    optional = true
+
+    [types.profileSettings.panic]
+    type = "string"
+    optional = true
+
+    [types.profileSettings.incremental]
+    type = "boolean"
+    optional = true
+
+    [types.profileSettings.codegen-units]
+    type = "integer"
+    min = 1
+    optional = true
+
+    [types.profileSettings.rpath]
+    type = "boolean"
+    optional = true
+
+    [types.profileSettings.package]
+    type = "collection"
+    itemtype = "types.profileSettings"
+    optional = true
+
+    [types.profileSettings.build-override]
+    type = "types.profileSettings"
+    optional = true
+
+[types.badges]
+type = "table"
+
+[types.workspace]
+type = "table"
+
+    [types.workspace.resolver]
+    type = "string"
+    optional = true
+
+    [types.workspace.members]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.workspace.exclude]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.workspace.default-members]
+    type = "array"
+    itemtype = "string"
+    optional = true
+
+    [types.workspace.package]
+    type = "types.packageBase"
+    optional = true
+
+    [types.workspace.dependencies]
+    type = "types.dependencyCollection"
+    optional = true
+
+    [types.workspace.lints]
+    type = "types.lints"
+    optional = true
+
+    [types.workspace.metadata]
+    type = "table"
+    optional = true
+
+[elements]
+
+[elements.cargo-features]
+type = "array"
+itemtype = "string"
+optional = true
+
+[elements.package]
+type = "types.package"
+optional = true
+
+[elements.lib]
+type = "types.target"
+optional = true
+
+[elements.bin]
+type = "array"
+itemtype = "types.target"
+optional = true
+
+[elements.example]
+type = "array"
+itemtype = "types.target"
+optional = true
+
+[elements.test]
+type = "array"
+itemtype = "types.target"
+optional = true
+
+[elements.bench]
+type = "array"
+itemtype = "types.target"
+optional = true
+
+[elements.dependencies]
+type = "types.dependencyCollection"
+optional = true
+
+[elements.dev-dependencies]
+type = "types.dependencyCollection"
+optional = true
+
+[elements.build-dependencies]
+type = "types.dependencyCollection"
+optional = true
+
+[elements.target]
+type = "collection"
+itemtype = "types.targetDependencies"
+optional = true
+
+[elements.badges]
+type = "types.badges"
+optional = true
+
+[elements.features]
+type = "collection"
+itemtype = "types.stringArray"
+optional = true
+
+[elements.lints]
+type = "types.lints"
+optional = true
+
+[elements.hints]
+type = "table"
+optional = true
+
+[elements.patch]
+type = "collection"
+itemtype = "types.dependencyCollection"
+optional = true
+
+[elements.replace]
+type = "types.dependencyCollection"
+optional = true
+
+[elements.profile]
+type = "collection"
+itemtype = "types.profileSettings"
+optional = true
+
+[elements.workspace]
+type = "types.workspace"
+optional = true

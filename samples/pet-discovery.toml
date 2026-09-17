@@ -1,0 +1,8 @@
+[toml-schema]
+version = "1.0.0"
+location = "pet-discovery.tosd"
+
+[document]
+name = "demo"
+version = "1.0.0"
+tags = ["toml", "schema"]

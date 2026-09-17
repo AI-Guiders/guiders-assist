@@ -1,0 +1,267 @@
+# Based on:
+# - https://packaging.python.org/en/latest/specifications/pyproject-toml/
+# - https://packaging.python.org/en/latest/specifications/dependency-groups/
+
+[toml-schema]
+version = "1.0.0"
+
+[types.stringArray]
+type = "array"
+itemtype = "string"
+
+[types.dependencyArray]
+type = "array"
+itemtype = "string"
+
+[types.stringMap]
+type = "collection"
+itemtype = "string"
+
+[types.email]
+type = "string"
+format = "email"
+
+[types.uri]
+type = "string"
+format = "uri"
+
+[types.uriMap]
+type = "collection"
+itemtype = "types.uri"
+
+[types.openTable]
+type = "table"
+
+[types.buildSystem]
+type = "table"
+
+    [types.buildSystem.requires]
+    type = "types.dependencyArray"
+
+    [types.buildSystem."build-backend"]
+    type = "string"
+    optional = true
+
+    [types.buildSystem."backend-path"]
+    type = "types.stringArray"
+    optional = true
+
+[types.readmeTable]
+type = "table"
+exactlyone = [ [ "file", "text" ] ]
+
+    [types.readmeTable.file]
+    type = "string"
+    optional = true
+
+    [types.readmeTable.text]
+    type = "string"
+    optional = true
+
+    [types.readmeTable."content-type"]
+    type = "string"
+
+[types.readme]
+oneof = [ "string", "types.readmeTable" ]
+
+[types.legacyLicenseTable]
+type = "table"
+deprecated = true
+description = "Use an SPDX license expression and license-files instead."
+
+    [types.legacyLicenseTable.file]
+    type = "string"
+    optional = true
+
+    [types.legacyLicenseTable.text]
+    type = "string"
+    optional = true
+
+[types.license]
+oneof = [ "string", "types.legacyLicenseTable" ]
+
+[types.person]
+type = "table"
+
+    [types.person.name]
+    type = "string"
+    optional = true
+
+    [types.person.email]
+    type = "types.email"
+    optional = true
+
+[types.people]
+type = "array"
+itemtype = "types.person"
+
+[types.projectName]
+type = "string"
+pattern = '^[A-Za-z0-9]([A-Za-z0-9._-]*[A-Za-z0-9])?$'
+
+[types.pythonImportName]
+type = "string"
+pattern = '^([A-Za-z_][A-Za-z0-9_]*)(\.[A-Za-z_][A-Za-z0-9_]*)*([ \t]*;[ \t]*private)?$'
+
+[types.pythonImportNameOrEmpty]
+type = "string"
+pattern = '^$|^([A-Za-z_][A-Za-z0-9_]*)(\.[A-Za-z_][A-Za-z0-9_]*)*([ \t]*;[ \t]*private)?$'
+
+[types.importNames]
+type = "array"
+itemtype = "types.pythonImportNameOrEmpty"
+
+[types.importNamespaces]
+type = "array"
+itemtype = "types.pythonImportName"
+
+[types.dynamicMetadata]
+type = "array"
+itemtype = "string"
+uniqueitems = true
+allowedvalues = [
+    "version",
+    "description",
+    "readme",
+    "requires-python",
+    "license",
+    "license-files",
+    "authors",
+    "maintainers",
+    "keywords",
+    "classifiers",
+    "urls",
+    "scripts",
+    "gui-scripts",
+    "entry-points",
+    "dependencies",
+    "optional-dependencies",
+    "import-names",
+    "import-namespaces",
+]
+
+[types.optionalDependencies]
+type = "collection"
+itemtype = "types.dependencyArray"
+
+[types.entryPoints]
+type = "collection"
+itemtype = "types.stringMap"
+
+[types.project]
+type = "table"
+
+    [types.project.name]
+    type = "types.projectName"
+
+    [types.project.version]
+    type = "string"
+    optional = true
+
+    [types.project.description]
+    type = "string"
+    optional = true
+
+    [types.project.readme]
+    type = "types.readme"
+    optional = true
+
+    [types.project.license]
+    type = "types.license"
+    optional = true
+
+    [types.project.authors]
+    type = "types.people"
+    optional = true
+
+    [types.project.maintainers]
+    type = "types.people"
+    optional = true
+
+    [types.project.keywords]
+    type = "types.stringArray"
+    optional = true
+
+    [types.project.classifiers]
+    type = "types.stringArray"
+    optional = true
+
+    [types.project.urls]
+    type = "types.uriMap"
+    optional = true
+
+    [types.project.scripts]
+    type = "types.stringMap"
+    optional = true
+
+    [types.project."requires-python"]
+    type = "string"
+    optional = true
+
+    [types.project."license-files"]
+    type = "types.stringArray"
+    optional = true
+
+    [types.project."gui-scripts"]
+    type = "types.stringMap"
+    optional = true
+
+    [types.project."entry-points"]
+    type = "types.entryPoints"
+    optional = true
+
+    [types.project.dependencies]
+    type = "types.dependencyArray"
+    optional = true
+
+    [types.project."optional-dependencies"]
+    type = "types.optionalDependencies"
+    optional = true
+
+    [types.project."import-names"]
+    type = "types.importNames"
+    optional = true
+
+    [types.project."import-namespaces"]
+    type = "types.importNamespaces"
+    optional = true
+
+    [types.project.dynamic]
+    type = "types.dynamicMetadata"
+    optional = true
+
+[types.dependencyGroupInclude]
+type = "table"
+
+    [types.dependencyGroupInclude."include-group"]
+    type = "string"
+
+[types.dependencyGroupItem]
+oneof = [ "string", "types.dependencyGroupInclude" ]
+
+[types.dependencyGroup]
+type = "array"
+itemtype = "types.dependencyGroupItem"
+
+[types.dependencyGroups]
+type = "collection"
+itemtype = "types.dependencyGroup"
+
+[elements]
+
+[elements.project]
+type = "types.project"
+optional = true
+
+[elements.tool]
+type = "collection"
+itemtype = "types.openTable"
+optional = true
+
+[elements."build-system"]
+type = "types.buildSystem"
+optional = true
+
+[elements."dependency-groups"]
+type = "types.dependencyGroups"
+optional = true

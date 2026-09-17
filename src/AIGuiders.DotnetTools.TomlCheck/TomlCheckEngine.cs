@@ -37,10 +37,7 @@ internal sealed class TomlCheckEngine(string? schemaOverride)
     {
         var schemaPath = ResolveSchemaPath(tomlPath);
         if (schemaPath is null)
-        {
-            Console.Error.WriteLine($"{tomlPath}: no #:schema directive (pass --schema <file.json>).");
-            return false;
-        }
+            return CheckWithDocumentDiscovery(tomlPath);
 
         if (!File.Exists(schemaPath))
         {
@@ -48,6 +45,52 @@ internal sealed class TomlCheckEngine(string? schemaOverride)
             return false;
         }
 
+        return IsTomlSchemaPath(schemaPath)
+            ? CheckWithTomlSchema(tomlPath, schemaPath)
+            : CheckWithJsonSchema(tomlPath, schemaPath);
+    }
+
+    private bool CheckWithDocumentDiscovery(string tomlPath)
+    {
+        try
+        {
+            var result = TomlSchema.TomlSchema.ValidateDocument(tomlPath);
+            return ReportTomlSchemaResult(tomlPath, "[toml-schema].location", result);
+        }
+        catch (TomlSchema.SchemaException ex)
+        {
+            Console.Error.WriteLine($"{tomlPath}: schema discovery failed — {ex.Message}");
+            return false;
+        }
+        catch (TomlSchema.DocumentParseException ex)
+        {
+            Console.Error.WriteLine($"{tomlPath}: TOML parse error — {ex.Message}");
+            return false;
+        }
+    }
+
+    private bool CheckWithTomlSchema(string tomlPath, string schemaPath)
+    {
+        try
+        {
+            var schema = TomlSchema.TomlSchema.Load(schemaPath);
+            var result = schema.Validate(tomlPath);
+            return ReportTomlSchemaResult(tomlPath, schemaPath, result);
+        }
+        catch (TomlSchema.SchemaException ex)
+        {
+            Console.Error.WriteLine($"{tomlPath}: schema load failed — {ex.Message}");
+            return false;
+        }
+        catch (TomlSchema.DocumentParseException ex)
+        {
+            Console.Error.WriteLine($"{tomlPath}: TOML parse error — {ex.Message}");
+            return false;
+        }
+    }
+
+    private bool CheckWithJsonSchema(string tomlPath, string schemaPath)
+    {
         string text;
         try
         {
@@ -105,16 +148,37 @@ internal sealed class TomlCheckEngine(string? schemaOverride)
         return false;
     }
 
+    private static bool ReportTomlSchemaResult(string tomlPath, string schemaLabel, TomlSchema.ValidationResult result)
+    {
+        foreach (var warning in result.Warnings)
+            Console.Error.WriteLine($"WARN {tomlPath}: {warning}");
+
+        if (result.IsValid)
+        {
+            Console.WriteLine($"OK  {tomlPath}");
+            return true;
+        }
+
+        Console.Error.WriteLine($"FAIL {tomlPath} (schema: {schemaLabel})");
+        foreach (var error in result.Errors)
+            Console.Error.WriteLine($"  {error}");
+        return false;
+    }
+
     private string? ResolveSchemaPath(string tomlPath)
     {
         if (!string.IsNullOrWhiteSpace(schemaOverride))
             return Path.GetFullPath(schemaOverride!);
 
         var directive = SchemaDirective.TryReadSchemaPath(tomlPath);
-        return directive is null
-            ? null
-            : SchemaDirective.ResolveSchemaPath(tomlPath, directive);
+        if (directive is not null)
+            return SchemaDirective.ResolveSchemaPath(tomlPath, directive);
+
+        return null;
     }
+
+    private static bool IsTomlSchemaPath(string schemaPath) =>
+        schemaPath.EndsWith(".tosd", StringComparison.OrdinalIgnoreCase);
 
     private static IEnumerable<string> ExpandPaths(IEnumerable<string> paths)
     {

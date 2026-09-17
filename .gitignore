@@ -2,6 +2,7 @@ bin/
 obj/
 artifacts/
 nupkg/
+.vendor/
 .vs/
 *.user
 *.suo
