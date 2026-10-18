@@ -9,7 +9,7 @@
     <AssemblyName>AIGuiders.Cli</AssemblyName>
 
     <PackageId>AIGuiders.Cli</PackageId>
-    <Version>0.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>AIGuiders</Authors>
     <Title>AIGuiders CLI helpers</Title>
     <Description>Shared MCP host argv helpers (--config resolution, help flags).</Description>
