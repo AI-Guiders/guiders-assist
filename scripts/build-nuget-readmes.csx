@@ -1,4 +1,3 @@
-#!/usr/bin/env dotnet script
 // Сборка NUGET.md (страниц пакетов на nuget.org) из фактов. Тул публичный: чужая раскладка может
 // не совпадать с нашей — потому факты адресуют проекты явно (project:), а папки задаются параметрами.
 // Запуск из корня целевой репы (или путь аргументом):
@@ -46,6 +45,9 @@ var factsRel = "docs/nuget/packages";
                  && a.Contains("build-nuget-readmes", StringComparison.OrdinalIgnoreCase))
             found = true;
     }
+    // Два режима: dotnet script (аргументы после .csx) и скомпилированный exe-тул
+    // (dotnet script не участвует: аргументы после argv[0]).
+    if (!found) afterScript.AddRange(argv.Skip(1));
     for (var i = 0; i < afterScript.Count; i++)
     {
         var a = afterScript[i];

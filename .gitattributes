@@ -1,6 +1,7 @@
 * text=auto
 
 *.cs        text eol=lf
+*.csx       text eol=lf
 *.md        text eol=lf
 *.json      text eol=lf
 *.yml       text eol=lf
